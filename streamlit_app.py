@@ -103,3 +103,4 @@ st.markdown("""
     p_value,
     "cette différence est significative, la nouvelle page est probablement meilleure." if p_value < 0.05 else "la différence peut s'expliquer par le hasard. Nous ne rejetons pas l'hypothèse nulle."
 ))
+
