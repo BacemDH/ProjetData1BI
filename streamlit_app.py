@@ -3,31 +3,20 @@ import pandas as pd
 import numpy as np
 import altair as alt
 
-# Set page configuration with dark theme
+# Configuration de la page
 st.set_page_config(
     page_title="A/B Test Analysis Dashboard",
     page_icon="📊",
-    layout="wide",
-    initial_sidebar_state="collapsed"
+    layout="wide"
 )
 
-# Force dark theme
-st.markdown('''
-    <style>
-        .stApp {
-            background-color: #0e1117;
-            color: #fafafa;
-        }
-    </style>
-''', unsafe_allow_html=True)
-
-# Load data
+# Chargement des données
 data = pd.read_csv("ab_data.csv")
 
-# Dashboard title
+# Titre du dashboard
 st.title("🔄 Analyse A/B Test : Ancienne vs Nouvelle Page")
 
-# Overview section
+# Vue d'ensemble
 st.header("📊 Vue d'ensemble")
 
 col1, col2, col3 = st.columns(3)
@@ -44,13 +33,14 @@ with col2:
 with col3:
     st.metric("Groupe Test", f"{treatment_visitors:,}")
 
-# Conversion rates
+# Taux de conversion
 st.header("📈 Taux de conversion")
 
 conversion_by_group = data.groupby('group')['converted'].mean().reset_index()
 st.dataframe(conversion_by_group.style.format({'converted': '{:.2%}'}))
 
-# Visualization
+# Visualisation
+st.subheader('Visualisation des taux de conversion')
 chart = alt.Chart(conversion_by_group).mark_bar().encode(
     x=alt.X('group:N', title='Groupe'),
     y=alt.Y('converted:Q', title='Taux de conversion', axis=alt.Axis(format='%')),
@@ -61,17 +51,17 @@ chart = alt.Chart(conversion_by_group).mark_bar().encode(
 
 st.altair_chart(chart, use_container_width=True)
 
-# Statistical test
-st.header("🎯 Test statistique")
+# Test statistique
+st.header('🎯 Test statistique')
 
-# Calculate p-value using simulation
+# Calcul de la p-value
 np.random.seed(42)
 n_simulations = 10000
 p_null = data['converted'].mean()
 n_treatment = len(data[data['group'] == 'treatment'])
 n_control = len(data[data['group'] == 'control'])
 
-# Observed difference
+# Différence observée
 obs_diff = (data[data['group'] == 'treatment']['converted'].mean() - 
             data[data['group'] == 'control']['converted'].mean())
 
@@ -84,16 +74,16 @@ for _ in range(n_simulations):
 
 p_value = (np.array(diffs) >= obs_diff).mean()
 
-# Display results
+# Affichage des résultats
 col4, col5 = st.columns(2)
 with col4:
-    st.metric("Différence observée", f"{obs_diff:.4f}")
+    st.metric('Différence observée', f'{obs_diff:.4f}')
 with col5:
-    st.metric("P-value", f"{p_value:.4f}")
+    st.metric('P-value', f'{p_value:.4f}')
 
 # Conclusion
-st.header("📝 Conclusion")
+st.header('📝 Conclusion')
 if p_value < 0.05:
-    st.success("La différence est statistiquement significative (p < 0.05)")
+    st.success('La différence est statistiquement significative (p < 0.05)')
 else:
-    st.info("La différence n'est pas statistiquement significative (p >= 0.05)")
+    st.info('La différence n\'est pas statistiquement significative (p >= 0.05)')
