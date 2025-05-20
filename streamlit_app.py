@@ -20,7 +20,7 @@ data['timestamp'] = pd.to_datetime(data['timestamp'])
 st.title("Analyse A/B Test : Ancienne vs Nouvelle Page")
 
 try:
-    st.image("ab_testing.jpg", use_column_width=True)
+    st.image("ab_testing.jpg", use_container_width=True)
 except:
     st.write("📊 A/B Testing Analysis Dashboard")
 
