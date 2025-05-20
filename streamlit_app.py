@@ -8,6 +8,9 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import altair as alt
+import matplotlib.pyplot as plt
+import seaborn as sns
+st.set_page_config(layout="centered")
 # --- Chargement des données ---
 data = pd.read_csv("ab_data.csv")
 # --- Titre du dashboard ---
